@@ -14,9 +14,14 @@ public class TCPServer {
 
         ServerSocket welcomeSocket = new ServerSocket(6789);
 
+		System.out.println("------------------------------------");
+		System.out.println("Created server on port 6789");
+		System.out.println("------------------------------------");
+		Socket connectionSocket = welcomeSocket.accept();
+
         while(true) {
 
-            Socket connectionSocket = welcomeSocket.accept();
+
 
             BufferedReader inFromClient =
                     new BufferedReader(new
@@ -27,7 +32,12 @@ public class TCPServer {
 
             clientSentence = inFromClient.readLine();
 
-            if (clientSentence == null) {
+			System.out.println("Client sentence received: " + clientSentence);
+
+            if (clientSentence == null || clientSentence.equalsIgnoreCase("bye")) {
+				System.out.println("------------------------------------");
+				System.out.println("User gave word bye - closing...");
+				System.out.println("------------------------------------");
                 connectionSocket.close();
                 break;
             }
@@ -35,6 +45,9 @@ public class TCPServer {
             capitalizedSentence = clientSentence.toUpperCase() + '\n';
 
             outToClient.writeBytes(capitalizedSentence);
+			inFromClient =
+					new BufferedReader(new
+							InputStreamReader(connectionSocket.getInputStream()));
         }
     }
 }

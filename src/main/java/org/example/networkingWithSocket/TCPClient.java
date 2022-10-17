@@ -13,22 +13,20 @@ public class TCPClient {
         String sentence;
         String modifiedSentence;
 
+//		Socket clientSocket = new Socket("192.168.91.20", 7878);
         Socket clientSocket = new Socket("127.0.0.1", 6789);
 
-        System.out.println("Please gve a word. the socket closes by gining the word exit.");
+        System.out.println("Please give a word. The connection closes by giving the word bye (not case sensitive).");
 
         BufferedReader inFromUser =
                 new BufferedReader(new InputStreamReader(System.in));
 
-        sentence = inFromUser.readLine();
+
 
         while (true) {
 
 
-            if (sentence.equalsIgnoreCase("exit")) {
-                clientSocket.close();
-                break;
-            }
+			sentence = inFromUser.readLine();
 
             DataOutputStream outToServer =
                     new DataOutputStream(clientSocket.getOutputStream());
@@ -38,11 +36,19 @@ public class TCPClient {
                             InputStreamReader(clientSocket.getInputStream()));
 
 
+
             outToServer.writeBytes(sentence + '\n');
 
-            modifiedSentence = inFromServer.readLine();
+			if (sentence.equalsIgnoreCase("bye")) {
+				clientSocket.close();
+				break;
+			}
+
+
+			modifiedSentence = inFromServer.readLine();
 
             System.out.println("FROM SERVER: " + modifiedSentence);
-        }
+			inFromUser = new BufferedReader(new InputStreamReader(System.in));
+		}
     }
 }
