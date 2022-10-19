@@ -32,22 +32,22 @@ public class TCPServer {
 
             clientSentence = inFromClient.readLine();
 
-			System.out.println("Client sentence received: " + clientSentence);
 
             if (clientSentence == null || clientSentence.equalsIgnoreCase("bye")) {
 				System.out.println("------------------------------------");
-				System.out.println("User gave word bye - closing...");
+				System.out.println("User gave word bye - client left");
 				System.out.println("------------------------------------");
-                connectionSocket.close();
-                break;
-            }
 
-            capitalizedSentence = clientSentence.toUpperCase() + '\n';
+				connectionSocket = welcomeSocket.accept();
+            } else {
+				System.out.println("Client sentence received: " + clientSentence);
+				capitalizedSentence = clientSentence.toUpperCase() + '\n';
+				outToClient.writeBytes(capitalizedSentence);
 
-            outToClient.writeBytes(capitalizedSentence);
-			inFromClient =
-					new BufferedReader(new
-							InputStreamReader(connectionSocket.getInputStream()));
+				inFromClient =
+						new BufferedReader(new
+								InputStreamReader(connectionSocket.getInputStream()));
+			}
         }
     }
 }

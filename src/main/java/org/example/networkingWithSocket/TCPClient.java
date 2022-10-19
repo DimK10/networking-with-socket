@@ -37,12 +37,14 @@ public class TCPClient {
 
 
 
-            outToServer.writeBytes(sentence + '\n');
+
 
 			if (sentence.equalsIgnoreCase("bye")) {
 				clientSocket.close();
 				break;
 			}
+
+			outToServer.writeBytes(sentence + '\n');
 
 
 			modifiedSentence = inFromServer.readLine();
